@@ -10,4 +10,4 @@ COPY services/shipping ./services/shipping
 
 EXPOSE 3002
 
-CMD ["node", "services/shipping/index.js"]
+CMD ["node", "services/shipping/index.js"]s
