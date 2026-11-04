@@ -1,27 +1,19 @@
-const grpc = require('@grpc/grpc-js');
-const protoLoader = require('@grpc/proto-loader');
-const products = require('./products.json');
+// Função para buscar produto por ID
+function searchProductByID(call, callback) {
+  const { id } = call.request;
+  const product = products.find((p) => p.id === id);
 
-const packageDefinition = protoLoader.loadSync('proto/inventory.proto', {
-    keepCase: true,
-    longs: String,
-    enums: String,
-    arrays: true,
-});
+  if (!product) {
+    return callback({
+      code: grpc.status.NOT_FOUND,
+      details: "Produto não encontrado",
+    });
+  }
 
-const inventoryProto = grpc.loadPackageDefinition(packageDefinition);
+  callback(null, product);
+}
 
-const server = new grpc.Server();
-
-// implementa os métodos do InventoryService
 server.addService(inventoryProto.InventoryService.service, {
-    SearchAllProducts: (_, callback) => {
-        callback(null, {
-            products: products,
-        });
-    },
-});
-
-server.bindAsync('127.0.0.1:3002', grpc.ServerCredentials.createInsecure(), () => {
-    console.log('Inventory Service running at http://127.0.0.1:3002');
+  searchProducts,
+  searchProductByID,
 });
